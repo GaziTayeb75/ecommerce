@@ -17,5 +17,8 @@
    "aFourDigitCodeHasBeenSent" : "আপনার ইমেলে ৪ সংখ্যার একটি কোড পাঠানো হয়েছে।",
    "verify" : "যাচাই",
    "categories" : "বিভাগ",
-   "seeAll" : "সব দেখুন"
+   "seeAll" : "সব দেখুন",
+   "popular" : "জনপ্রিয়",
+   "special" : "বিশেষ",
+   "sNew" : "নতুন"
 }

@@ -1,10 +1,14 @@
 import 'package:ecommerce/app/assets_path.dart';
 import 'package:ecommerce/core/extensions/localization_extension.dart';
+import 'package:ecommerce/features/common/controllers/main_bottom_nav_bar_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import '../widgets/app_bar_action_button.dart';
-import '../widgets/category_item.dart';
+import '../../../common/widgets/category_item.dart';
 import '../widgets/home_carousel_slider.dart';
+import '../widgets/product_card.dart';
 import '../widgets/section_header.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,41 +23,87 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            _buildSearchTextField(),
-            const SizedBox(height: 16),
-            HomeCarouselSlider(),
-            const SizedBox(height: 16),
-            SectionHeader(
-              title: context.localization.categories,
-              onTapSeeAll: () {},
-            ),
-            const SizedBox(height: 16),
-            _buildCategoriesSection()
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              _buildSearchTextField(),
+              const SizedBox(height: 16),
+              HomeCarouselSlider(),
+              const SizedBox(height: 16),
+              SectionHeader(
+                title: context.localization.categories,
+                onTapSeeAll: () {
+                  Get.find<MainBottomNavBarController>().moveToCategory();
+                },
+              ),
+              const SizedBox(height: 16),
+              _buildCategoriesSection(),
+              const SizedBox(height: 16),
+              SectionHeader(
+                title: context.localization.popular,
+                onTapSeeAll: () {},
+              ),
+              const SizedBox(height: 16),
+              _buildProductSection(),
+
+              const SizedBox(height: 16),
+              _buildCategoriesSection(),
+              const SizedBox(height: 16),
+              SectionHeader(
+                title: context.localization.special,
+                onTapSeeAll: () {},
+              ),
+              const SizedBox(height: 16),
+              _buildProductSection(),
+              const SizedBox(height: 16),
+              SectionHeader(
+                title: context.localization.sNew,
+                onTapSeeAll: () {},
+              ),
+              const SizedBox(height: 16),
+              _buildProductSection(),
+              const SizedBox(height: 32),
+
+
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildCategoriesSection() {
+  Widget _buildProductSection() {
     return SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                CategoryItem(),
-                CategoryItem(),
-                CategoryItem(),
-                CategoryItem(),
-                CategoryItem(),
-                CategoryItem(),
-                CategoryItem(),
-              ],
-            ),
-          );
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          ProductCard(),
+          ProductCard(),
+          ProductCard(),
+          ProductCard(),
+          ProductCard(),
+          ProductCard(),
+          ProductCard(),
+        ],
+      ),
+    );
+  } Widget _buildCategoriesSection() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          CategoryItem(),
+          CategoryItem(),
+          CategoryItem(),
+          CategoryItem(),
+          CategoryItem(),
+          CategoryItem(),
+          CategoryItem(),
+        ],
+      ),
+    );
   }
 
   Widget _buildSearchTextField() {
@@ -87,5 +137,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-
