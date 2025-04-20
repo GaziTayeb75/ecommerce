@@ -20,5 +20,7 @@
    "seeAll" : "সব দেখুন",
    "popular" : "জনপ্রিয়",
    "special" : "বিশেষ",
-   "sNew" : "নতুন"
+   "sNew" : "নতুন",
+   "wishlist" : "ইচ্ছা তালিকা",
+   "productDetails" : "পণ্যের বিবরণ"
 }

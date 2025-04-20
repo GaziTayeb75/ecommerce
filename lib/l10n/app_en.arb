@@ -21,5 +21,7 @@
    "seeAll" : "See all",
    "popular" : "Popular",
    "special" : "Special",
-   "sNew" : "New"
+   "sNew" : "New",
+   "wishlist" : "Wishlist",
+   "productDetails" : "Product Details"
 }

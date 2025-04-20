@@ -8,7 +8,7 @@ import 'package:get/get_core/src/get_main.dart';
 import '../widgets/app_bar_action_button.dart';
 import '../../../common/widgets/category_item.dart';
 import '../widgets/home_carousel_slider.dart';
-import '../widgets/product_card.dart';
+import '../../../common/widgets/product_card.dart';
 import '../widgets/section_header.dart';
 
 class HomeScreen extends StatefulWidget {
