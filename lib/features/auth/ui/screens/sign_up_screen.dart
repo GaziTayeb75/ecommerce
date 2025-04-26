@@ -1,10 +1,18 @@
 import 'package:ecommerce/core/extensions/localization_extension.dart';
+import 'package:ecommerce/core/widgets/centered_circular_progress_indicator.dart';
+import 'package:ecommerce/features/auth/data/models/sign_up_model.dart';
+import 'package:ecommerce/features/auth/ui/controllers/sign_up_controller.dart';
 import 'package:ecommerce/features/auth/ui/screens/verify_otp_screen.dart';
 import 'package:ecommerce/features/auth/ui/widgets/app_logo.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 import '../../../../app/app_colors.dart';
+import '../../../../core/widgets/show_snack_bar_message.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -24,6 +32,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _deliveryAddressTEController =
       TextEditingController();
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  final SignUpController signUpController = Get.find<SignUpController>();
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +51,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _buildForm(TextTheme textTheme) {
     return Form(
       key: _formkey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
         children: [
           const SizedBox(height: 32),
@@ -62,6 +72,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
             textInputAction: TextInputAction.next,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(hintText: context.localization.email),
+            validator: (String? value) {
+              String email = value ?? '';
+              if (!EmailValidator.validate(email)) {
+                return 'Enter a valid email';
+              }
+              return null;
+            },
           ),
           const SizedBox(height: 8),
           TextFormField(
@@ -70,6 +87,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
             decoration: InputDecoration(
               hintText: context.localization.firstName,
             ),
+            validator: (String? value) {
+              if (value?.trim().isEmpty ?? true) {
+                return 'Enter your first name';
+              }
+              return null;
+            },
           ),
           const SizedBox(height: 8),
           TextFormField(
@@ -78,6 +101,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
             decoration: InputDecoration(
               hintText: context.localization.lastName,
             ),
+            validator: (String? value) {
+              if (value?.trim().isEmpty ?? true) {
+                return 'Enter your last name';
+              }
+              return null;
+            },
           ),
           const SizedBox(height: 8),
           TextFormField(
@@ -85,11 +114,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
             decoration: InputDecoration(
               hintText: context.localization.password,
             ),
+            validator: (String? value) {
+              if ((value?.isEmpty ?? true) || value!.length < 6) {
+                return 'Enter a password more than 6 letters';
+              }
+              return null;
+            },
           ),
           TextFormField(
             controller: _phoneTEController,
             textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.phone,
             decoration: InputDecoration(hintText: context.localization.phone),
+            validator: (String? value) {
+              String phoneNumber = value ?? '';
+              RegExp regExp = RegExp(r"^(?:\+88|88)?(01[3-9]\d{8})$");
+              if (regExp.hasMatch(phoneNumber) == false) {
+                return 'Enter your valid phone number';
+              }
+            },
           ),
           const SizedBox(height: 16),
           TextFormField(
@@ -103,12 +146,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 vertical: 16,
               ),
             ),
+            validator: (String? value) {
+              if (value?.trim().isEmpty ?? true) {
+                return 'Enter your delivery address';
+              }
+              return null;
+            },
           ),
 
           const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: _onTapSignUpButton,
-            child: Text(context.localization.signUp),
+          GetBuilder<SignUpController>(
+            builder: (controller) {
+              return Visibility(
+                visible: controller.signUpInProgress == false,
+                replacement: CenteredCircularProgressIndicator(),
+                child: ElevatedButton(
+                  onPressed: _onTapSignUpButton,
+                  child: Text(context.localization.signUp),
+                ),
+              );
+            },
           ),
           const SizedBox(height: 24),
           RichText(
@@ -133,8 +190,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  void _onTapSignUpButton() {
-    Navigator.pushNamed(context, VerifyOtpScreen.name);
+  Future<void> _onTapSignUpButton() async {
+    if (_formkey.currentState!.validate()) {
+      SignUpModel signUpModel = SignUpModel(
+        email: _emailTEController.text.trim(),
+        firstName: _firstNameTEController.text.trim(),
+        lastName: _lastNameTEController.text.trim(),
+        phone: _phoneTEController.text.trim(),
+        password: _passwordTEController.text,
+        deliveryAddress: _deliveryAddressTEController.text.trim(),
+      );
+      final bool isSuccess = await signUpController.signUp(signUpModel);
+      if (isSuccess) {
+        Navigator.pushNamed(context, VerifyOtpScreen.name);
+      } else {
+        showSnackBarMessage(context, signUpController.errorMessage!, true);
+      }
+    }
   }
 
   void _onTapSignInButton() {

@@ -32,9 +32,9 @@ class NetworkCaller {
       Response response = await get(uri, headers: headers);
 
       _logResponse(url, response);
+      final decodedResponse = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
-        final decodedResponse = jsonDecode(response.body);
         return NetworkResponse(
           isSuccess: true,
           statusCode: response.statusCode,
@@ -45,11 +45,13 @@ class NetworkCaller {
         return NetworkResponse(
           isSuccess: false,
           statusCode: response.statusCode,
+          errorMessage: decodedResponse['msg'],
         );
       } else {
         return NetworkResponse(
           isSuccess: false,
           statusCode: response.statusCode,
+          errorMessage: decodedResponse['msg'],
         );
       }
     } catch (e) {
@@ -79,9 +81,9 @@ class NetworkCaller {
       );
 
       _logResponse(url, response);
+      final decodedResponse = jsonDecode(response.body);
 
-      if (response.statusCode == 200) {
-        final decodedResponse = jsonDecode(response.body);
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return NetworkResponse(
           isSuccess: true,
           statusCode: response.statusCode,
@@ -92,11 +94,13 @@ class NetworkCaller {
         return NetworkResponse(
           isSuccess: false,
           statusCode: response.statusCode,
+          errorMessage: decodedResponse['msg'],
         );
       } else {
         return NetworkResponse(
           isSuccess: false,
           statusCode: response.statusCode,
+          errorMessage: decodedResponse['msg'],
         );
       }
     } catch (e) {
@@ -202,7 +206,6 @@ class NetworkCaller {
     }
   }
 
-
   Future<NetworkResponse> deleteRequest({
     required String url,
     Map<String, dynamic>? body,
@@ -249,8 +252,6 @@ class NetworkCaller {
       );
     }
   }
-
-
 
   void _logRequest(
     String url,
