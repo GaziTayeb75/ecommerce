@@ -1,10 +1,15 @@
 import 'package:ecommerce/app/app_colors.dart';
 import 'package:ecommerce/core/extensions/localization_extension.dart';
+import 'package:ecommerce/core/widgets/show_snack_bar_message.dart';
+import 'package:ecommerce/features/auth/data/models/sign_in_request_model.dart';
+import 'package:ecommerce/features/auth/ui/controllers/sign_in_controller.dart';
 import 'package:ecommerce/features/auth/ui/screens/sign_up_screen.dart';
 import 'package:ecommerce/features/auth/ui/widgets/app_logo.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:ecommerce/features/common/ui/screens/main_bottom_nav_bar_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -16,6 +21,10 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  final TextEditingController _emailTEController = TextEditingController();
+  final TextEditingController _passwordTEController = TextEditingController();
+  final SignInController _signInController = Get.find<SignInController>();
+
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
@@ -40,12 +49,14 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               const SizedBox(height: 16),
               TextFormField(
+                controller: _emailTEController,
                 decoration: InputDecoration(
                   hintText: context.localization.email,
                 ),
               ),
               const SizedBox(height: 8),
               TextFormField(
+                controller: _passwordTEController,
                 obscureText: true,
                 decoration: InputDecoration(
                   hintText: context.localization.password,
@@ -53,7 +64,7 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: _onTapSignInButton,
                 child: Text(context.localization.signIn),
               ),
               const SizedBox(height: 16),
@@ -71,7 +82,8 @@ class _SignInScreenState extends State<SignInScreen> {
                         fontWeight: FontWeight.bold,
                         color: AppColors.themeColor,
                       ),
-                      recognizer: TapGestureRecognizer()..onTap = _onTapSignUpButton
+                      recognizer:
+                          TapGestureRecognizer()..onTap = _onTapSignUpButton,
                     ),
                   ],
                 ),
@@ -82,7 +94,29 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
     );
   }
+
+  void _onTapSignInButton() async{
+    // TODO: validate the form
+    SignInRequestModel signInRequestModel = SignInRequestModel(
+      email: _emailTEController.text.trim(),
+      password: _passwordTEController.text,
+    );
+    final bool isSuccess = await _signInController.signIn(signInRequestModel);
+    if (isSuccess) {
+      Navigator.pushNamedAndRemoveUntil(context, MainBottomNavBarScreen.name, (value) => false);
+    }else {
+      showSnackBarMessage(context, _signInController.errorMessage!, true);
+    }
+  }
+
   void _onTapSignUpButton() {
     Navigator.pushNamed(context, SignUpScreen.name);
+  }
+
+  @override
+  void dispose() {
+    _emailTEController.dispose();
+    _passwordTEController.dispose();
+    super.dispose();
   }
 }
