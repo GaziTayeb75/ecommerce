@@ -1,8 +1,5 @@
 import 'package:ecommerce/app/app_configs.dart';
-import 'package:ecommerce/features/auth/ui/screens/sign_in_screen.dart';
-import 'package:ecommerce/features/auth/ui/screens/sign_up_screen.dart';
 import 'package:ecommerce/features/common/ui/screens/main_bottom_nav_bar_screen.dart';
-import 'package:ecommerce/features/home/ui/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../widgets/app_logo.dart';
