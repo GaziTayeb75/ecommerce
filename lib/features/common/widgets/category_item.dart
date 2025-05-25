@@ -24,7 +24,7 @@ class CategoryItem extends StatelessWidget {
         children: [
           Card(
             margin: EdgeInsets.symmetric(horizontal: 8),
-            color: AppColors.themeColor.withOpacity(0.15),
+            color: AppColors.themeColor.withAlpha((0.15 * 255).toInt()),
             elevation: 0,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
