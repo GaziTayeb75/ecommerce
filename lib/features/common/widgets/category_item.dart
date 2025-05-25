@@ -1,7 +1,6 @@
 import 'package:ecommerce/features/common/data/models/category_model.dart';
 import 'package:ecommerce/features/products/ui/screens/product_list_screen.dart';
 import 'package:flutter/material.dart';
-
 import '../../../app/app_colors.dart';
 
 class CategoryItem extends StatelessWidget {

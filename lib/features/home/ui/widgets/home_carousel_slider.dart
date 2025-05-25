@@ -4,7 +4,6 @@ import 'package:ecommerce/core/widgets/centered_circular_progress_indicator.dart
 import 'package:ecommerce/features/common/controllers/home_slider_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 class HomeCarouselSlider extends StatefulWidget {
