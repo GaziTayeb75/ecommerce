@@ -3,6 +3,8 @@ import 'package:ecommerce/app/app_colors.dart';
 import 'package:ecommerce/core/widgets/centered_circular_progress_indicator.dart';
 import 'package:ecommerce/features/common/controllers/home_slider_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 class HomeCarouselSlider extends StatefulWidget {
@@ -25,7 +27,7 @@ class _HomeCarouselSliderState extends State<HomeCarouselSlider> {
             child: CenteredCircularProgressIndicator(),
           ),
           child: Visibility(
-            visible: sliderController.sliders.isEmpty,
+            visible: sliderController.sliders.isNotEmpty,
             child: Column(
               children: [
                 CarouselSlider(

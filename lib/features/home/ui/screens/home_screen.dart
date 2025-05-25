@@ -1,6 +1,9 @@
 import 'package:ecommerce/app/assets_path.dart';
 import 'package:ecommerce/core/extensions/localization_extension.dart';
+import 'package:ecommerce/core/widgets/centered_circular_progress_indicator.dart';
+import 'package:ecommerce/features/common/controllers/category_controller.dart';
 import 'package:ecommerce/features/common/controllers/main_bottom_nav_bar_controller.dart';
+import 'package:ecommerce/features/common/data/models/category_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -65,8 +68,6 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 16),
               _buildProductSection(),
               const SizedBox(height: 32),
-
-
             ],
           ),
         ),
@@ -89,20 +90,33 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
-  } Widget _buildCategoriesSection() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          CategoryItem(),
-          CategoryItem(),
-          CategoryItem(),
-          CategoryItem(),
-          CategoryItem(),
-          CategoryItem(),
-          CategoryItem(),
-        ],
-      ),
+  }
+
+  Widget _buildCategoriesSection() {
+    return GetBuilder<CategoryController>(
+      builder: (controller) {
+        if (controller.isInitialLoading) {
+          return SizedBox(
+            height: 100,
+            child: CenteredCircularProgressIndicator(),
+          );
+        }
+
+        List<CategoryModel> list =
+            controller.categoryList.length > 10
+                ? controller.categoryList.sublist(0, 10)
+                : controller.categoryList;
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children:
+                list.map((e) {
+                  return CategoryItem(categoryModel: e);
+                }).toList(),
+          ),
+        );
+      },
     );
   }
 

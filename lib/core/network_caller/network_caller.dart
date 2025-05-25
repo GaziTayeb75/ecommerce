@@ -23,9 +23,13 @@ class NetworkCaller {
 
   Future<NetworkResponse> getRequest({
     required String url,
-    Map<String, dynamic>? params,
+    Map<String, dynamic>? queryParams,
   }) async {
     try {
+      url += '?';
+        for (String key in queryParams?.keys ?? {}) {
+          url += '$key=${queryParams![key]}&';
+        }
       Uri uri = Uri.parse(url);
       Map<String, String> headers = {'token': ''};
       _logRequest(url, headers);
