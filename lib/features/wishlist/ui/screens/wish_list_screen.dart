@@ -17,7 +17,7 @@ class WishListScreen extends StatelessWidget {
           crossAxisSpacing: 0,
         ),
         itemBuilder: (context, index) {
-          return FittedBox(child: ProductCard());
+          //return FittedBox(child: ProductCard());
         },
       ),
     );

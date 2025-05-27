@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../app/app_colors.dart';
 
 class CategoryItem extends StatelessWidget {
-  const CategoryItem({
-    super.key,
-    required this.categoryModel});
+  const CategoryItem({super.key, required this.categoryModel});
 
   final CategoryModel categoryModel;
 
@@ -17,7 +15,7 @@ class CategoryItem extends StatelessWidget {
         Navigator.pushNamed(
           context,
           ProductListScreen.name,
-          arguments: categoryModel.title,
+          arguments: categoryModel,
         );
       },
       child: Column(
@@ -28,14 +26,10 @@ class CategoryItem extends StatelessWidget {
             elevation: 0,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Image.network (
-                categoryModel.icon,
-                width: 48,
-                height: 48,
-              ),
+              child: Image.network(categoryModel.icon, width: 48, height: 48),
             ),
           ),
-           Text(
+          Text(
             categoryModel.title,
             style: const TextStyle(
               color: AppColors.themeColor,

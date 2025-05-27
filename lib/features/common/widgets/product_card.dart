@@ -1,3 +1,4 @@
+import 'package:ecommerce/features/products/data/models/product_model.dart';
 import 'package:ecommerce/features/products/ui/screens/product_details_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -5,12 +6,14 @@ import '../../../app/app_colors.dart';
 import '../../../app/assets_path.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({super.key});
+  const ProductCard({super.key, required this.productModel});
+
+  final ProductModel productModel;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         Navigator.pushNamed(context, ProductDetailsScreen.name);
       },
       child: Card(
@@ -28,19 +31,22 @@ class ProductCard extends StatelessWidget {
                     topLeft: Radius.circular(8),
                     topRight: Radius.circular(8),
                   ),
-                  image: DecorationImage(
-                    image: AssetImage(AssetsPath.dummyShoePng),
-                    fit: BoxFit.scaleDown,
-                  ),
+                  image: productModel.photos.isNotEmpty ? DecorationImage(
+                    image: NetworkImage(productModel.photos.first),
+                    fit: BoxFit.cover,
+                  ) : null,
                 ),
+                child: productModel.photos.isEmpty ? Icon(Icons.error_outline_sharp) : null,
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Nike NK76 - new collection',
+                      productModel.title,
                       maxLines: 1,
+                      textAlign: TextAlign.start,
                       style: TextStyle(
                         overflow: TextOverflow.ellipsis,
                         fontWeight: FontWeight.w600,
@@ -50,7 +56,7 @@ class ProductCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '100৳',
+                          '${productModel.currentPrice}৳',
                           style: TextStyle(
                             color: AppColors.themeColor,
                             fontWeight: FontWeight.w600,
@@ -59,7 +65,7 @@ class ProductCard extends StatelessWidget {
                         Wrap(
                           children: [
                             Icon(Icons.star, size: 18, color: Colors.orange),
-                            Text('3.3'),
+                            Text('${productModel.rating}'),
                           ],
                         ),
                         Card(
