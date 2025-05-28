@@ -165,7 +165,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.themeColor.withOpacity(0.1),
+        color: AppColors.themeColor.withAlpha((0.1 * 255).toInt()),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(16),
           topRight: Radius.circular(16),
