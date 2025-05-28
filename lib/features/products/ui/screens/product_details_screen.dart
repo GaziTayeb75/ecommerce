@@ -1,12 +1,18 @@
 import 'package:ecommerce/app/app_colors.dart';
 import 'package:ecommerce/core/extensions/localization_extension.dart';
 import 'package:ecommerce/core/widgets/centered_circular_progress_indicator.dart';
+import 'package:ecommerce/core/widgets/show_snack_bar_message.dart';
+import 'package:ecommerce/features/auth/ui/controllers/auth_controller.dart';
+import 'package:ecommerce/features/auth/ui/screens/sign_in_screen.dart';
+import 'package:ecommerce/features/common/controllers/add_to_cart_controller.dart';
 import 'package:ecommerce/features/products/ui/controllers/product_details_controller.dart';
 import 'package:ecommerce/features/products/ui/widgets/color_picker.dart';
 import 'package:ecommerce/features/products/ui/widgets/increment_decrement_counter_widget.dart';
 import 'package:ecommerce/features/products/ui/widgets/product_image_carousel_slider.dart';
 import 'package:ecommerce/features/products/ui/widgets/size_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
@@ -24,6 +30,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   final ProductDetailsController _productDetailsController =
       ProductDetailsController();
 
+  final AddToCartController _addToCartController = AddToCartController();
+  String? _selectedColor;
+  String? _selectedSize;
+
   @override
   void initState() {
     super.initState();
@@ -37,15 +47,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       body: GetBuilder(
         init: _productDetailsController,
         builder: (controller) {
-
           if (controller.inProgress) {
             return CenteredCircularProgressIndicator();
           }
 
           if (controller.errorMessage != null) {
-            return Center(
-              child: Text(controller.errorMessage!),
-            );
+            return Center(child: Text(controller.errorMessage!));
           }
 
           return Column(
@@ -55,7 +62,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                       ProductImageCarouselSlider(imageList:controller.product.photos),
+                      ProductImageCarouselSlider(
+                        imageList: controller.product.photos,
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
@@ -65,7 +74,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         controller.product.title,
@@ -83,7 +93,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 color: Colors.amber,
                                                 size: 20,
                                               ),
-                                              Text('${controller.product.rating}'),
+                                              Text(
+                                                '${controller.product.rating}',
+                                              ),
                                             ],
                                           ),
                                           TextButton(
@@ -93,12 +105,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           Card(
                                             color: AppColors.themeColor,
                                             shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(
-                                                4,
-                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
                                             ),
                                             child: Padding(
-                                              padding: const EdgeInsets.all(4.0),
+                                              padding: const EdgeInsets.all(
+                                                4.0,
+                                              ),
                                               child: Icon(
                                                 Icons.favorite_border,
                                                 size: 16,
@@ -122,14 +135,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ColorPicker(
                               colors: controller.product.colors,
                               onChange: (selectedColor) {
-                                print(selectedColor);
+                                _selectedColor = selectedColor;
                               },
                             ),
                             const SizedBox(height: 16),
                             SizePicker(
                               sizes: controller.product.sizes,
-                              onChange: (selectedColor) {
-                                print(selectedColor);
+                              onChange: (selectedSize) {
+                                _selectedSize = selectedSize;
                               },
                             ),
                             const SizedBox(height: 16),
@@ -141,7 +154,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ),
                             ),
                             const SizedBox(height: 8),
-                             Text(
+                            Text(
                               controller.product.description,
                               style: TextStyle(color: Colors.grey),
                             ),
@@ -153,15 +166,21 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 ),
               ),
 
-              _buildPriceAndAddToCartSection(),
+              _buildPriceAndAddToCartSection(
+                controller.product.sizes.isNotEmpty,
+                controller.product.colors.isNotEmpty,
+              ),
             ],
           );
-        }
+        },
       ),
     );
   }
 
-  Widget _buildPriceAndAddToCartSection() {
+  Widget _buildPriceAndAddToCartSection(
+    bool isSizeAvailable,
+    bool isColorAvailable,
+  ) {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -190,7 +209,43 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
           SizedBox(
             width: 140,
-            child: ElevatedButton(onPressed: () {}, child: Text('Add to Card')),
+            child: GetBuilder(
+              init: _addToCartController,
+              builder: (controller) {
+                return Visibility(
+                  visible: controller.inProgress == false,
+                  replacement: CenteredCircularProgressIndicator(),
+                  child: ElevatedButton(
+                    onPressed: () async{
+                      if (isSizeAvailable && _selectedSize == null) {
+                        showSnackBarMessage(context, 'Please select your size',true);
+                        return;
+                      }
+                      if (isColorAvailable && _selectedColor == null) {
+                        showSnackBarMessage(context, 'Please select your color', true);
+                        return;
+                      }
+
+                      if (Get.find<AuthController>().isValidUser() == false) {
+                        Get.to(() => SignInScreen());
+                        return;
+                      }
+
+
+                      final bool isSuccess = await _addToCartController.addToCart(
+                        _productDetailsController.product.id,
+                      );
+                      if (isSuccess) {
+                        showSnackBarMessage(context, 'Add to cart');
+                      } else {
+                        showSnackBarMessage(context, _addToCartController.errorMessage!, true);
+                      }
+                    },
+                    child: Text('Add to Card'),
+                  ),
+                );
+              }
+            ),
           ),
         ],
       ),
