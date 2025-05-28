@@ -13,7 +13,11 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, ProductDetailsScreen.name);
+        Navigator.pushNamed(
+          context,
+          ProductDetailsScreen.name,
+          arguments: productModel.id,
+        );
       },
       child: Card(
         color: Colors.white,
@@ -30,12 +34,18 @@ class ProductCard extends StatelessWidget {
                     topLeft: Radius.circular(8),
                     topRight: Radius.circular(8),
                   ),
-                  image: productModel.photos.isNotEmpty ? DecorationImage(
-                    image: NetworkImage(productModel.photos.first),
-                    fit: BoxFit.cover,
-                  ) : null,
+                  image:
+                      productModel.photos.isNotEmpty
+                          ? DecorationImage(
+                            image: NetworkImage(productModel.photos.first),
+                            fit: BoxFit.cover,
+                          )
+                          : null,
                 ),
-                child: productModel.photos.isEmpty ? Icon(Icons.error_outline_sharp) : null,
+                child:
+                    productModel.photos.isEmpty
+                        ? Icon(Icons.error_outline_sharp)
+                        : null,
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
