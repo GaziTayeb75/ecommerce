@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:ecommerce/features/auth/ui/controllers/auth_controller.dart';
 import 'package:get/get.dart' as getx;
-import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
 
