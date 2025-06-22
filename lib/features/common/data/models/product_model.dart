@@ -1,4 +1,3 @@
-import 'brand_model.dart';
 
 class ProductModel {
   final String id;
