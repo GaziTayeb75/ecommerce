@@ -31,7 +31,7 @@ class NetworkCaller {
           url += '$key=${queryParams![key]}&';
         }
       Uri uri = Uri.parse(url);
-      Map<String, String> headers = {'token': ''};
+      Map<String, String> headers = {'token': getx.Get.find<AuthController>().token ?? ''};
       _logRequest(url, headers);
       Response response = await get(uri, headers: headers);
 
@@ -76,7 +76,7 @@ class NetworkCaller {
       Uri uri = Uri.parse(url);
       Map<String, String>? headers = {
         'content-type': 'application/json',
-        'token': '',
+        'token': getx.Get.find<AuthController>().token ?? '',
       };
       _logRequest(url, headers);
       Response response = await post(
@@ -125,7 +125,7 @@ class NetworkCaller {
       Uri uri = Uri.parse(url);
       Map<String, String>? headers = {
         'content-type': 'application/json',
-        'token': '',
+        'token': getx.Get.find<AuthController>().token ?? '',
       };
       _logRequest(url, headers);
       Response response = await put(
@@ -173,7 +173,7 @@ class NetworkCaller {
       Uri uri = Uri.parse(url);
       Map<String, String>? headers = {
         'content-type': 'application/json',
-        'token': '',
+        'token': getx.Get.find<AuthController>().token ?? '',
       };
       _logRequest(url, headers);
       Response response = await patch(
@@ -221,7 +221,7 @@ class NetworkCaller {
       Uri uri = Uri.parse(url);
       Map<String, String>? headers = {
         'content-type': 'application/json',
-        'token': '',
+        'token': getx.Get.find<AuthController>().token ?? '',
       };
       _logRequest(url, headers);
       Response response = await delete(

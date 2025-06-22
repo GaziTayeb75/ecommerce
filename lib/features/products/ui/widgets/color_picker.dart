@@ -34,6 +34,7 @@ class _ColorPickerState extends State<ColorPicker> {
               return GestureDetector(
                 onTap: (){
                   selectedColor = color;
+                  widget.onChange(color);
                   setState(() {});
                 },
                 child: Container(

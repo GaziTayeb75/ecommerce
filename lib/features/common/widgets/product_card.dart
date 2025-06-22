@@ -1,8 +1,8 @@
-import 'package:ecommerce/features/products/data/models/product_model.dart';
 import 'package:ecommerce/features/products/ui/screens/product_details_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../../app/app_colors.dart';
+import '../data/models/product_model.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({super.key, required this.productModel});

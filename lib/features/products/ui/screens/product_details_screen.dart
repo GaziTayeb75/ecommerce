@@ -143,6 +143,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               sizes: controller.product.sizes,
                               onChange: (selectedSize) {
                                 _selectedSize = selectedSize;
+
                               },
                             ),
                             const SizedBox(height: 16),
