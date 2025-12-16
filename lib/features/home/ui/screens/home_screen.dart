@@ -7,7 +7,6 @@ import 'package:ecommerce/features/common/data/models/category_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import '../widgets/app_bar_action_button.dart';
 import '../../../common/widgets/category_item.dart';
 import '../widgets/home_carousel_slider.dart';
@@ -136,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   AppBar _buildAppBar() {
     return AppBar(
-      title: SvgPicture.asset(AssetsPath.logoNavSvg),
+      title: Image.asset(AssetsPath.logoNavPng,height: 80,width: 80,),
       actions: [
         AppBarActionButton(icon: Icons.person_outline, onTap: () {}),
         const SizedBox(width: 8),

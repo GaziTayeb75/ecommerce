@@ -1,6 +1,7 @@
 import 'package:ecommerce/core/widgets/centered_circular_progress_indicator.dart';
 import 'package:ecommerce/features/cart/data/models/cart_item_model.dart';
 import 'package:ecommerce/features/cart/ui/controllers/cart_list_controller.dart';
+import 'package:ecommerce/features/cart/ui/screens/payment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../app/app_colors.dart';
@@ -100,7 +101,13 @@ class _CartListScreenState extends State<CartListScreen> {
           SizedBox(
             width: 140,
             child: ElevatedButton(
-              onPressed: () async {},
+              onPressed: () async {
+                Navigator.pushNamed(
+                  context,
+                  PaymentScreen.name,
+                  arguments: _cartListController.totalPrice.toDouble(),
+                );
+              },
               child: Text('Checkout'),
             ),
           ),
